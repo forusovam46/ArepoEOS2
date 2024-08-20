@@ -324,3 +324,16 @@ int MaxThreads = 1;
 IO_Field *IO_Fields;
 int N_IO_Fields   = 0;
 int Max_IO_Fields = 0;
+
+/*
+ * Options for thermal evolution:
+ * - NO (Default option; no thermal evolution, uses original AREPO behavior)
+ * - CONSTANT (Uses predefined constant values as defined in eff_internal_energy.c)
+ * - LINEAR (Uses a predefined linear function as defined in eff_internal_energy.c. If the resulting function would become negative, a piecewise linear function should be used instead)
+ * - POLYNOMIAL_PIECEWISE (Uses a predefined 5th-degree polynomial piecewise function as defined in eff_internal_energy.c)
+ *
+ * Note: You can modify the values and functions for these options directly in eff_internal_energy.c.
+ */
+
+// Initialize the global variable
+InternalEnergyOption internalEnergyOptionGlobal = NO;  // Default is NO, change as needed

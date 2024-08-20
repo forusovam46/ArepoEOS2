@@ -1925,4 +1925,14 @@ extern double fac;
 
 extern int MaxThreads;
 
+typedef enum {
+    NO,
+    CONSTANT,
+    LINEAR,
+    POLYNOMIAL_PIECEWISE
+} InternalEnergyOption;
+
+// Declare the global variable
+extern InternalEnergyOption internalEnergyOptionGlobal;
+
 #endif /* #define ALLVARS_H */

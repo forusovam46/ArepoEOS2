@@ -154,6 +154,7 @@ OBJS =   debug_md5/calc_checksum.o \
          hydro/riemann_hlld.o \
          hydro/scalars.o \
          hydro/update_primitive_variables.o \
+         hydro/eff_internal_energy.o \
          init/begrun.o \
          init/density.o \
          init/init.o \
@@ -215,6 +216,7 @@ INCL += debug_md5/Md5.h \
         gitversion/version.h\
         gravity/forcetree.h \
         main/allvars.h \
+        hydro/eff_internal_energy.h \
         main/proto.h \
         mesh/mesh.h \
         mesh/voronoi/voronoi.h \

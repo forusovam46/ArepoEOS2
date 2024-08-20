@@ -48,6 +48,8 @@
 
 #include "../main/allvars.h"
 #include "../main/proto.h"
+#include "../hydro/eff_internal_energy.h"
+
 
 /*! \brief Main routine to update the primitive hydrodynamics variables from
  *         the conserved ones.
@@ -81,6 +83,29 @@ void update_primitive_variables(void)
         continue;
 
       do_validity_checks(P, SphP, i, &pvd);
+
+      if (internalEnergyOptionGlobal != NO)
+      {
+          // Calculate the desired specific internal energy (Utherm) using the custom function
+          double unew = getEffInternalEnergy(internalEnergyOptionGlobal, SphP[i].Utherm, All.Time);
+          SphP[i].Utherm = unew;
+
+          // Recalculate the total energy based on the updated Utherm
+#ifdef MESHRELAX
+          SphP[i].Energy = P[i].Mass * SphP[i].Utherm;
+#else
+          SphP[i].Energy =
+              pvd.atime * pvd.atime * P[i].Mass * SphP[i].Utherm +
+              0.5 * P[i].Mass * (P[i].Vel[0] * P[i].Vel[0] + P[i].Vel[1] * P[i].Vel[1] + P[i].Vel[2] * P[i].Vel[2]);
+#endif
+
+#ifdef MHD
+          SphP[i].Energy +=
+              0.5 * (SphP[i].B[0] * SphP[i].B[0] + SphP[i].B[1] * SphP[i].B[1] + SphP[i].B[2] * SphP[i].B[2]) *
+              SphP[i].Volume * pvd.atime;
+#endif
+      }
+        // Step 3: Update other primitive variables based on the new energy setup
 
       update_primitive_variables_single(P, SphP, i, &pvd);
 
