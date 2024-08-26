@@ -66,6 +66,7 @@ void update_primitive_variables(void)
 
   struct pv_update_data pvd;
   int idx, i;
+  double unew;
 
   if(All.ComovingIntegrationOn)
     {
@@ -84,10 +85,13 @@ void update_primitive_variables(void)
 
       do_validity_checks(P, SphP, i, &pvd);
 
+      update_primitive_variables_single(P, SphP, i, &pvd);
+
+      // Effektive model
       if (internalEnergyOptionGlobal != NO)
       {
           // Calculate the desired specific internal energy (Utherm) using the custom function
-          double unew = getEffInternalEnergy(internalEnergyOptionGlobal, SphP[i].Utherm, All.Time);
+          unew = getEffInternalEnergy(internalEnergyOptionGlobal, SphP[i].Utherm, All.Time);
           SphP[i].Utherm = unew;
 
           // Recalculate the total energy based on the updated Utherm
@@ -105,11 +109,13 @@ void update_primitive_variables(void)
               SphP[i].Volume * pvd.atime;
 #endif
       }
-        // Step 3: Update other primitive variables based on the new energy setup
-
-      update_primitive_variables_single(P, SphP, i, &pvd);
 
       update_internal_energy(P, SphP, i, &pvd);
+
+      // Effektive model
+      if (internalEnergyOptionGlobal != NO && fabs(SphP[i].Utherm - unew) > 1e-5) {
+            printf("Warning: Utherm after update does not match unew.\n");
+      }
 
       set_pressure_of_cell_internal(P, SphP, i); /* calculate the pressure from Density and Utherm (and composition) */
 
