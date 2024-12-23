@@ -91,7 +91,7 @@ void update_primitive_variables(void)
       if (internalEnergyOptionGlobal != NO)
       {
           // Calculate the desired specific internal energy (Utherm) using the custom function
-          unew = getEffInternalEnergy(internalEnergyOptionGlobal, SphP[i].Utherm, All.Time);
+          unew = getEffInternalEnergy(internalEnergyOptionGlobal, SphP[i].Utherm, All.Time, SphP[i].Density);
           SphP[i].Utherm = unew;
 
           // Recalculate the total energy based on the updated Utherm
